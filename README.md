@@ -6,7 +6,7 @@ https://github.com/texane/stlink
 
 ```
 // Run the st-util debugger utility
-$ ./st-util &
+$ st-util &
 
 // Start GDB
 $ arm-none-eabi-gdb build/ch.elf
