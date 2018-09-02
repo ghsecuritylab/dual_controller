@@ -33,6 +33,8 @@ extern "C" {
     
     float theta, sin_theta, cos_theta;
     
+    bool faulted;
+    
     biquad_t iq_compensator;
     biquad_t id_compensator;
     

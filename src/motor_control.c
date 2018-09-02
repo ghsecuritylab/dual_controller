@@ -166,4 +166,6 @@ void MotorControlCb(motor_control_t* m,
   m->theta = theta;
   m->sin_theta = sin_theta;
   m->cos_theta = cos_theta;
+  
+  m->faulted = !palReadLine(m->nfault);
 }
