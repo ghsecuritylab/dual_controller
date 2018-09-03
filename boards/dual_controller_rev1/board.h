@@ -213,7 +213,7 @@
 /*
  * GPIOA
  */
-#define VAL_GPIOA_MODER             (PIN_MODE_INPUT(GPIOA_TIM2_CH1) |       \
+#define VAL_GPIOA_MODER             (PIN_MODE_ALTERNATE(GPIOA_TIM2_CH1) |   \
                                      PIN_MODE_ALTERNATE(GPIOA_RMII_REF_CLK) |\
                                      PIN_MODE_ALTERNATE(GPIOA_RMII_MDIO) |  \
                                      PIN_MODE_ANALOG(GPIOA_ADC123_IN3) |    \
@@ -240,7 +240,8 @@
                                      PIN_PUPDR_FLOATING(GPIOA_SWCLK) |      \
                                      PIN_PUPDR_PULLUP(GPIOA_SPI3_CS))
 #define VAL_GPIOA_ODR               (PIN_ODR_LOW(GPIOA_SPI3_CS))
-#define VAL_GPIOA_AFRL              (PIN_AFIO_AF(GPIOA_RMII_REF_CLK, 11U) | \
+#define VAL_GPIOA_AFRL              (PIN_AFIO_AF(GPIOA_TIM2_CH1, 1U)      | \
+                                     PIN_AFIO_AF(GPIOA_RMII_REF_CLK, 11U) | \
                                      PIN_AFIO_AF(GPIOA_RMII_MDIO, 11U) |    \
                                      PIN_AFIO_AF(GPIOA_TIM8_BKIN1, 3U) |    \
                                      PIN_AFIO_AF(GPIOA_RMII_RX_DV, 11U))
@@ -252,16 +253,17 @@
  */
 #define VAL_GPIOB_MODER             (PIN_MODE_ANALOG(GPIOB_ADC12_IN8) |     \
                                      PIN_MODE_ANALOG(GPIOB_ADC12_IN9) |     \
-                                     PIN_MODE_INPUT(GPIOB_TIM2_CH2) |       \
-                                     PIN_MODE_INPUT(GPIOB_TIM2_CH3) |       \
+                                     PIN_MODE_ALTERNATE(GPIOB_TIM2_CH2) |   \
+                                     PIN_MODE_ALTERNATE(GPIOB_TIM2_CH3) |   \
                                      PIN_MODE_ALTERNATE(GPIOB_RMII_TXD1))
 #define VAL_GPIOB_OTYPER            (PIN_OTYPE_PUSHPULL(GPIOB_RMII_TXD1))
 #define VAL_GPIOB_OSPEEDR           (PIN_OSPEED_HIGH(GPIOB_RMII_TXD1))
 #define VAL_GPIOB_PUPDR             (PIN_PUPDR_PULLUP(GPIOB_TIM2_CH2) |     \
                                      PIN_PUPDR_PULLUP(GPIOB_TIM2_CH3))
 #define VAL_GPIOB_ODR               (PIN_ODR_HIGH(GPIOB_RMII_TXD1))
-#define VAL_GPIOB_AFRL              0
-#define VAL_GPIOB_AFRH              (PIN_AFIO_AF(GPIOB_RMII_TXD1, 11U))
+#define VAL_GPIOB_AFRL              (PIN_AFIO_AF(GPIOB_TIM2_CH2, 1U))
+#define VAL_GPIOB_AFRH              (PIN_AFIO_AF(GPIOB_TIM2_CH3, 1U)  |     \
+                                     PIN_AFIO_AF(GPIOB_RMII_TXD1, 11U))
 
 
 /*
@@ -306,9 +308,9 @@
 /*
  * GPIOD
  */
-#define VAL_GPIOD_MODER             (PIN_MODE_INPUT(GPIOD_TIM4_CH1) |        \
-                                     PIN_MODE_INPUT(GPIOD_TIM4_CH2) |        \
-                                     PIN_MODE_INPUT(GPIOD_TIM4_CH3))
+#define VAL_GPIOD_MODER             (PIN_MODE_ALTERNATE(GPIOD_TIM4_CH1) |    \
+                                     PIN_MODE_ALTERNATE(GPIOD_TIM4_CH2) |    \
+                                     PIN_MODE_ALTERNATE(GPIOD_TIM4_CH3))
 #define VAL_GPIOD_OTYPER            (0)
 #define VAL_GPIOD_OSPEEDR           (0)
 #define VAL_GPIOD_PUPDR             (PIN_PUPDR_PULLUP(GPIOD_TIM4_CH1) |      \
@@ -316,7 +318,9 @@
                                      PIN_PUPDR_PULLUP(GPIOD_TIM4_CH3))
 #define VAL_GPIOD_ODR               (0)
 #define VAL_GPIOD_AFRL              (0)
-#define VAL_GPIOD_AFRH              (0)
+#define VAL_GPIOD_AFRH              (PIN_AFIO_AF(GPIOD_TIM4_CH1, 2U) |       \
+                                     PIN_AFIO_AF(GPIOD_TIM4_CH2, 2U) |       \
+                                     PIN_AFIO_AF(GPIOD_TIM4_CH3, 2U))
 
 
 /*

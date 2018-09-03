@@ -3,8 +3,21 @@
 #include "ch.h"
 #include "hal.h"
 
+#define NUM_ICU_CAPTURES 3
+
 typedef struct {
   ioline_t a, b, c;
+  ICUDriver* icu;
+  uint32_t icu_freq;
+  uint32_t pwm_freq;
+  
+  float speed;
+  
+  int last_segment;
+  int direction;
+  
+  int icu_capture[NUM_ICU_CAPTURES];
+  int num_valid_icu_captures;
 } hall_sensors_t;
 
 typedef enum {

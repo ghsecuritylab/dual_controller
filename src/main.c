@@ -29,13 +29,18 @@
 #include "util.h"
 #include <string.h>
 
+#define PWM_FREQ 35e3
+
 static hall_sensors_t h1 = { .a = LINE_TIM4_CH3,
                              .b = LINE_TIM4_CH2,
-                             .c = LINE_TIM4_CH1 };
+                             .c = LINE_TIM4_CH1,
+                             .icu = &ICUD4,
+                             .icu_freq = STM32_TIMCLK1 / 100,
+                             .pwm_freq = PWM_FREQ };
 
 static motor_control_t m1 = { .driver = &PWMD1,
                               .clock_freq = STM32_TIMCLK2,
-                              .pwm_freq = 35e3,
+                              .pwm_freq = PWM_FREQ,
                               .nfault = LINE_TIM1_BKIN1,
                               .fault_clear = LINE_GPIOG_PIN1,
                               .bridge_enabled = LINE_GPIOG_PIN0,
@@ -43,7 +48,7 @@ static motor_control_t m1 = { .driver = &PWMD1,
                              };
 static motor_control_t m2 = { .driver = &PWMD8,
                               .clock_freq = STM32_TIMCLK2,
-                              .pwm_freq = 35e3,
+                              .pwm_freq = PWM_FREQ,
                               .nfault = LINE_TIM8_BKIN1,
                               .fault_clear = LINE_GPIOF_PIN12,
                               .bridge_enabled = LINE_GPIOF_PIN11
@@ -145,7 +150,7 @@ static systime_t dispatch_telemetry(comms_t* c,
 {
   (void)c;
   
-  cw_pack_map_size(pc, 9);
+  cw_pack_map_size(pc, 10);
   
   cw_pack_str(pc, "i_a", 3);
   cw_pack_float(pc, m1.i_a);
@@ -169,6 +174,9 @@ static systime_t dispatch_telemetry(comms_t* c,
   
   cw_pack_str(pc, "faulted", 7);
   cw_pack_boolean(pc, m1.faulted);
+  
+  cw_pack_str(pc, "speed", 5);
+  cw_pack_float(pc, h1.speed);
   
   return TIME_MS2I(20);
 }
