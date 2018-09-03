@@ -30,35 +30,35 @@ static void _UpdateSpeedMeasurement(hall_sensors_t* hs) {
   }
 }
 
-static void _PollICU(hall_sensors_t* hs, int segment, int direction) {
+static bool _PollICU(hall_sensors_t* hs, int* capture) {
+  bool new_capture = false;
+  
   uint32_t sr = hs->icu->tim->SR;
   if(sr & (STM32_TIM_SR_CC1IF | STM32_TIM_SR_UIF)) {
-    if(direction != hs->direction) {
+    if(sr & STM32_TIM_SR_UIF) {
       hs->num_valid_icu_captures = 0;
-    }
-    else if(sr & STM32_TIM_SR_UIF) {
-      hs->num_valid_icu_captures = 0;
+      hs->speed = 0.f;
     }
     else {
       // Use the speed measurement
-      hs->icu_capture[segment % NUM_ICU_CAPTURES] = hs->icu->tim->CCR[1];
-      if(hs->num_valid_icu_captures < NUM_ICU_CAPTURES)
-        hs->num_valid_icu_captures++;
+      new_capture = true;
+      *capture = hs->icu->tim->CCR[1];
     }
-    
-    // Store segment and direction
-    hs->last_segment = segment;
-    hs->direction = direction;
-    _UpdateSpeedMeasurement(hs);
     
     if(sr & STM32_TIM_SR_CC1IF) {
       // Reset flags
       hs->icu->tim->SR &= ~ (STM32_TIM_SR_CC1IF | STM32_TIM_SR_UIF);
     }
   }
+  
+  return new_capture;
 }
 
 hall_sensors_state_e HallSensorsGetState(hall_sensors_t* hs) {
+  // Poll for an updated speed measurement
+  int capture = 0;
+  bool new_capture = _PollICU(hs, &capture);
+  
   // Measure state
   hall_sensors_state_e state = (palReadLine(hs->a) ? 0b001 : 0b000) |
                                (palReadLine(hs->b) ? 0b010 : 0b000) |
@@ -71,8 +71,21 @@ hall_sensors_state_e HallSensorsGetState(hall_sensors_t* hs) {
   
   int direction = (segment_jump > 0) ? 1 : -1;
   
-  // Poll for an updated speed measurement
-  _PollICU(hs, segment, direction);
+  if(new_capture) {
+    if(direction == hs->direction) {
+      hs->icu_capture[segment % NUM_ICU_CAPTURES] = capture;
+      if(hs->num_valid_icu_captures < NUM_ICU_CAPTURES)
+        hs->num_valid_icu_captures++;
+    } else {
+      hs->num_valid_icu_captures = 0;
+    }
+    
+    _UpdateSpeedMeasurement(hs);
+    
+    hs->last_segment = segment;
+    hs->direction = direction;
+  }
+  
   
   return state;
 }
