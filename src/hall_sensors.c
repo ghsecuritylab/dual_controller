@@ -24,7 +24,7 @@ static void _UpdateSpeedMeasurement(hall_sensors_t* hs) {
     }
     
     float speed = hs->icu_freq / (float)sum_periods;
-    hs->speed = speed;
+    hs->speed = speed * hs->direction;
   } else {
     hs->speed = 0.f;
   }
